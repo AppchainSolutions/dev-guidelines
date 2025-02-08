@@ -1,0 +1,43 @@
+name: Validar Documentación
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Configurar Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.9'
+    
+    - name: Instalar dependencias
+      run: |
+        python -m pip install --upgrade pip
+        pip install mdformat-gfm proselint
+
+    - name: Validar formato Markdown
+      run: |
+        find . -name "*.md" -not -path "./node_modules/*" | xargs mdformat --check
+
+    - name: Revisar estilo de documentación
+      run: |
+        find . -name "*.md" -not -path "./node_modules/*" | xargs proselint
+
+    - name: Verificar enlaces rotos
+      uses: gaurav-nelson/github-action-markdown-link-check@v1
+      with:
+        folder-path: 'docs'
+        max-depth: 2
+        config-file: '.github/workflows/mlc_config.json'
+
+    - name: Generar informe
+      run: |
+        echo "✅ Documentación validada exitosamente"

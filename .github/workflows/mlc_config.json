@@ -1,0 +1,13 @@
+{
+    "ignorePatterns": [
+        {
+            "pattern": "^http://localhost"
+        },
+        {
+            "pattern": "^https://github.com/AppchainSolutions"
+        }
+    ],
+    "retryOn429": true,
+    "retryCount": 3,
+    "fallbackRetryDelay": 500
+}
